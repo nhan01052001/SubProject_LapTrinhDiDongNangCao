@@ -9,6 +9,7 @@ import { HomePage } from "./screens/HomePage";
 import { AddProduct } from "./screens/AddProduct";
 import { DetailProduct } from "./screens/DetailProduct";
 import { Search } from "./screens/Search";
+import { Register } from "./screens/Register";
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
@@ -42,6 +43,11 @@ export default function App() {
         <RootStack.Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <RootStack.Screen
+          name="Register"
+          component={Register}
           options={{ headerShown: false }}
         />
         <RootStack.Screen

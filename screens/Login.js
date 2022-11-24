@@ -128,7 +128,7 @@ export const Login = ({ navigation }) => {
           <Text style={{ color: "#000", fontSize: 14 }}>
             Don't have an Account?
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text
               style={{
                 color: "#000",
