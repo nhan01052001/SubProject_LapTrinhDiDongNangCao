@@ -12,7 +12,11 @@ import {
 } from "react-native";
 import { useTogglePasswordVisibility } from "../utils/useTogglePasswordVisibility";
 import { Feather } from "@expo/vector-icons";
-import { EmailIcon, LockIcon } from "../components/IconBottomTabs";
+import {
+  EmailIcon,
+  LockIcon,
+  PersonalIcon,
+} from "../components/IconBottomTabs";
 
 const { width } = Dimensions.get("window");
 
@@ -46,7 +50,7 @@ export const Register = ({ navigation }) => {
           <TextInput
             style={styles.input}
             value={name}
-            placeholder="Email"
+            placeholder="Name"
             onChangeText={(text) => {
               setName(text);
             }}
@@ -58,7 +62,7 @@ export const Register = ({ navigation }) => {
               bottom: 12,
             }}
           >
-            <EmailIcon color="#000" size={26} />
+            <PersonalIcon color="#000" size={26} />
           </View>
         </View>
 
@@ -176,7 +180,7 @@ export const Register = ({ navigation }) => {
             borderRadius: 100,
             marginBottom: 12,
           }}
-          onPress={() => navigation.replace("BottomTasNavigator")}
+          onPress={() => navigation.navigate("OTP")}
         >
           <Text style={{ color: "#fff", fontSize: 24, fontWeight: "700" }}>
             Register

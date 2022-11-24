@@ -10,6 +10,7 @@ import { AddProduct } from "./screens/AddProduct";
 import { DetailProduct } from "./screens/DetailProduct";
 import { Search } from "./screens/Search";
 import { Register } from "./screens/Register";
+import SC_OTP from "./screens/OTP";
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
@@ -48,6 +49,11 @@ export default function App() {
         <RootStack.Screen
           name="Register"
           component={Register}
+          options={{ headerShown: false }}
+        />
+        <RootStack.Screen
+          name="OTP"
+          component={SC_OTP}
           options={{ headerShown: false }}
         />
         <RootStack.Screen

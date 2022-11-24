@@ -10,9 +10,11 @@ import {
 import CartBar from "../components/CartBar";
 import { BackIcon } from "../components/IconBottomTabs";
 import { DATA_CART } from "../data/dataCart";
+import { PayUpIcon } from "../components/IconBottomTabs";
 
 export const Cart = () => {
   const [value, setValue] = useState(0);
+  const [tongTien, setTongTien] = useState(0);
 
   useEffect(() => {
     const test = () => {
@@ -21,6 +23,16 @@ export const Cart = () => {
     };
     test();
   }, [value]);
+
+  // useEffect(() => {
+  //   setTongTien(0);
+  //   const getTongTien = () => {
+  //     for (let i = 0; i < DATA_CART.length; i++) {
+  //       setTongTien(DATA_CART[i].price + tongTien);
+  //     }
+  //   };
+  //   getTongTien();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,7 +53,12 @@ export const Cart = () => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <CartBar cart={item} />}
           />
+          {/* <TouchableOpacity style={styles.btn}>
+            <PayUpIcon color="#000" size={24} />
+            <Text style={styles.textBtn}>Pay Up</Text>
+          </TouchableOpacity> */}
         </View>
+
         <View
           style={{
             height: "20%",
@@ -68,7 +85,7 @@ export const Cart = () => {
               $
             </Text>
             <Text style={{ color: "#000", fontSize: 16, fontWeight: "700" }}>
-              Tong tien
+              {tongTien}
             </Text>
           </View>
         </View>
@@ -88,5 +105,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
+  },
+
+  btn: {
+    width: "40%",
+    paddingVertical: 15,
+    backgroundColor: "#63d689",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    flexDirection: "row",
   },
 });
