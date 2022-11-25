@@ -110,10 +110,10 @@ const SC_OTP = ({ navigation }) => {
           }}
         >
           <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: 5 }}>
-            Xác thực OTP
+            Verify OTP
           </Text>
           <Text style={{ fontSize: 16 }}>
-            OTP được gửi qua số điện thoại của bạn {numberPhone}
+            OTP sent to your email {numberPhone}
           </Text>
         </View>
       </View>
@@ -147,7 +147,7 @@ const SC_OTP = ({ navigation }) => {
             <Text
               style={{ fontSize: 18, fontWeight: "500", textAlign: "center" }}
             >
-              Gửi OTP
+              Send OTP
             </Text>
           </TouchableOpacity>
         ) : (

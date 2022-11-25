@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -11,10 +11,14 @@ import CartBar from "../components/CartBar";
 import { BackIcon } from "../components/IconBottomTabs";
 import { DATA_CART } from "../data/dataCart";
 import { PayUpIcon } from "../components/IconBottomTabs";
+import { ListContext } from "./DetailProduct";
+import { useIsFocused } from "@react-navigation/native";
+import { List } from "react-native-paper";
 
 export const Cart = () => {
   const [value, setValue] = useState(0);
   const [tongTien, setTongTien] = useState(0);
+  const [listCart, setListCart] = useState();
 
   useEffect(() => {
     const test = () => {
@@ -24,15 +28,26 @@ export const Cart = () => {
     test();
   }, [value]);
 
-  // useEffect(() => {
-  //   setTongTien(0);
-  //   const getTongTien = () => {
-  //     for (let i = 0; i < DATA_CART.length; i++) {
-  //       setTongTien(DATA_CART[i].price + tongTien);
-  //     }
-  //   };
-  //   getTongTien();
-  // }, []);
+  useEffect(() => {
+    setTongTien(0);
+    const getTongTien = () => {
+      setTongTien(0);
+      for (let i = 0; i < DATA_CART.length; i++) {
+        setTongTien(DATA_CART[i].price + tongTien);
+      }
+    };
+    getTongTien();
+  }, [DATA_CART]);
+
+  useEffect(() => {
+    const getList = () => {
+      setListCart(DATA_CART);
+    };
+
+    getList();
+  }, [DATA_CART]);
+
+  const increasing = () => {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,12 +61,14 @@ export const Cart = () => {
       <View style={{ height: "100%" }}>
         <View style={{ marginBottom: 70, height: "80%" }}>
           <FlatList
-            data={DATA_CART}
+            data={listCart}
             // showsHorizontalScrollIndicator={false}
             // contentContainerStyle={{ paddingBottom: "" }}
             // columnWrapperStyle={{ flex: 1, justifyContent: "space-around" }}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <CartBar cart={item} />}
+            renderItem={({ item }) => (
+              <CartBar cart={item} onPress={() => increasing()} />
+            )}
           />
           {/* <TouchableOpacity style={styles.btn}>
             <PayUpIcon color="#000" size={24} />

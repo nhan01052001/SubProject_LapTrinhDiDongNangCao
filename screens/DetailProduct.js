@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -23,6 +23,7 @@ import Size from "../components/Size";
 import { DATA_SHOE } from "../data/data";
 import Color from "../components/Color";
 import ViewMoreText from "react-native-view-more-text";
+import { DATA_CART } from "../data/dataCart";
 
 const size = 22;
 
@@ -57,22 +58,27 @@ const DATA_COLOR = [
   },
 ];
 
+export const ListContext = createContext();
+
 export const DetailProduct = ({ navigation, route }) => {
   const id = route.params;
   const [product, setProduct] = useState(DATA_SHOE.find((o) => o.id === id.id));
   const [size, setSize] = useState(product.size);
   const [amount, setAmount] = useState(1);
   const [price, setPrice] = useState(product.price);
+  const [addToCart, setAddToCart] = useState("nhan");
 
-  useEffect(() => {
-    console.log(id.id);
-    const getProduct = () => {
-      //setProduct(DATA_SHOE.find((o) => o.id === id.id));
-      console.log(product);
-      console.log(size);
-    };
-    getProduct();
-  }, []);
+  const addList = () => {
+    DATA_CART.push({
+      id: DATA_CART.length + 1,
+      idP: id.id,
+      img: product.img,
+      name: product.name,
+      price: product.price,
+      amount: amount,
+    });
+    console.log(DATA_CART);
+  };
 
   const renderViewMore = (onPress) => {
     return (
@@ -105,225 +111,238 @@ export const DetailProduct = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.tabBarChat}>
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => navigation.goBack()}
-        >
-          <BackIcon color="#000" size={24} />
-        </TouchableOpacity>
-        <View
-          style={{ width: "80%", alignItems: "center", alignItems: "center" }}
-        >
-          <Text style={{ fontSize: "22", fontWeight: "500", color: "#000" }}>
-            Detail Product
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.content}>
-        <View style={{ height: "40%" }}>
-          <Image
-            style={{ width: "100%", height: "100%" }}
-            source={product.img}
-            //resizeMode="contain"
-          />
-        </View>
-        <ScrollView
-          style={{
-            // height: "60%",
-            backgroundColor: "#e3e1e1",
-            borderTopLeftRadius: "34",
-            borderTopRightRadius: "34",
-            padding: 24,
-          }}
-        >
-          {/* Ten bran va danh gia */}
+    <ListContext.Provider value={addToCart}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.tabBarChat}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => navigation.goBack()}
+          >
+            <BackIcon color="#000" size={24} />
+          </TouchableOpacity>
           <View
+            style={{ width: "80%", alignItems: "center", alignItems: "center" }}
+          >
+            <Text style={{ fontSize: "22", fontWeight: "500", color: "#000" }}>
+              Detail Product
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.content}>
+          <View style={{ height: "40%" }}>
+            <Image
+              style={{ width: "100%", height: "100%" }}
+              source={product.img}
+              //resizeMode="contain"
+            />
+          </View>
+          <ScrollView
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 24,
+              // height: "60%",
+              backgroundColor: "#e3e1e1",
+              borderTopLeftRadius: "34",
+              borderTopRightRadius: "34",
+              padding: 24,
             }}
           >
-            <Text style={{ color: "#949292", fontSize: 16, fontWeight: "600" }}>
-              {product.brand}
-            </Text>
+            {/* Ten bran va danh gia */}
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
+                marginBottom: 24,
               }}
             >
-              <Text style={{ color: "#000", fontSize: 16, marginRight: 5 }}>
-                {product.evaluate}
-              </Text>
-              <StarGoldIcon color="#3ea31f" size={16} />
-            </View>
-          </View>
-          {/* Ten san pham va gia tien */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 24,
-            }}
-          >
-            <Text style={{ color: "#000", fontSize: 22, fontWeight: "700" }}>
-              {product.name}
-            </Text>
-
-            <View style={{ flexDirection: "row" }}>
               <Text
+                style={{ color: "#949292", fontSize: 16, fontWeight: "600" }}
+              >
+                {product.brand}
+              </Text>
+              <View
                 style={{
-                  color: "#3ea31f",
-                  fontSize: 20,
-                  fontWeight: "700",
-                  marginRight: 5,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                $
-              </Text>
-              <Text style={{ color: "#000", fontSize: 20, fontWeight: "700" }}>
-                {price}
-              </Text>
+                <Text style={{ color: "#000", fontSize: 16, marginRight: 5 }}>
+                  {product.evaluate}
+                </Text>
+                <StarGoldIcon color="#3ea31f" size={16} />
+              </View>
             </View>
-          </View>
-          {/* so luong */}
-          <View
-            style={{
-              marginBottom: 24,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
-              Amount
-            </Text>
+            {/* Ten san pham va gia tien */}
             <View
               style={{
                 flexDirection: "row",
+                justifyContent: "space-between",
                 alignItems: "center",
+                marginBottom: 24,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#000",
+                  fontSize: 22,
+                  fontWeight: "700",
+                  width: "70%",
+                }}
+              >
+                {product.name}
+              </Text>
+
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    color: "#3ea31f",
+                    fontSize: 20,
+                    fontWeight: "700",
+                    marginRight: 5,
+                  }}
+                >
+                  $
+                </Text>
+                <Text
+                  style={{ color: "#000", fontSize: 20, fontWeight: "700" }}
+                >
+                  {price}
+                </Text>
+              </View>
+            </View>
+            {/* so luong */}
+            <View
+              style={{
+                marginBottom: 24,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
+                Amount
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={reduce}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    backgroundColor: "#63d689",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* <MinusIcon color="#000" size={26} /> */}
+                  <Text style={{ fontSize: 26 }}>-</Text>
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: 50,
+                    paddingVertical: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 30,
+                    borderWidth: 1,
+                    borderColor: "#000",
+                    marginHorizontal: 10,
+                  }}
+                >
+                  <Text>{amount}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={increasing}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    backgroundColor: "#63d689",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AddNewIcon color="#000" size={13} />
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* Cac loai size */}
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
+                Size
+              </Text>
+              <FlatList
+                data={size}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => <Size listSize={item} />}
+              />
+            </View>
+            {/* color */}
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
+                Color
+              </Text>
+              <View style={{ paddingLeft: 10 }}>
+                <FlatList
+                  data={DATA_COLOR}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => <Color colorName={item} />}
+                />
+              </View>
+            </View>
+            {/* Description */}
+            <View style={{ marginBottom: 50 }}>
+              <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
+                Description
+              </Text>
+              <ViewMoreText
+                numberOfLines={3}
+                renderViewMore={renderViewMore}
+                renderViewLess={renderViewLess}
+                textStyle={{ paddingLeft: 10, marginTop: 5 }}
+              >
+                <Text
+                  style={{ fontSize: "16", color: "#000", fontWeight: "500" }}
+                >
+                  Lorem ipsum dolor sit amet, in quo dolorum ponderum, nam veri
+                  molestie constituto eu. Eum enim tantas sadipscing ne, ut
+                  omnes malorum nostrum cum. Errem populo qui ne, ea ipsum
+                  antiopam definitionem eos.
+                </Text>
+              </ViewMoreText>
+            </View>
+
+            {/* Button */}
+            <View
+              style={{
+                width: "100%",
+                marginBottom: 100,
+                flexDirection: "row",
                 justifyContent: "space-around",
               }}
             >
-              <TouchableOpacity
-                onPress={reduce}
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: "#63d689",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {/* <MinusIcon color="#000" size={26} /> */}
-                <Text style={{ fontSize: 26 }}>-</Text>
+              <TouchableOpacity style={styles.btn} onPress={() => addList()}>
+                <CartIcon color="#000" size={22} />
+                <Text style={styles.textBtn}>Add To Cart</Text>
               </TouchableOpacity>
-              <View
-                style={{
-                  width: 50,
-                  paddingVertical: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: 30,
-                  borderWidth: 1,
-                  borderColor: "#000",
-                  marginHorizontal: 10,
-                }}
-              >
-                <Text>{amount}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={increasing}
-                style={{
-                  width: 30,
-                  height: 30,
-                  backgroundColor: "#63d689",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <AddNewIcon color="#000" size={13} />
+              <TouchableOpacity style={styles.btn}>
+                <PayUpIcon color="#000" size={22} />
+                <Text style={styles.textBtn}>Pay Up</Text>
               </TouchableOpacity>
             </View>
-          </View>
-          {/* Cac loai size */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
-              Size
-            </Text>
-            <FlatList
-              data={size}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => <Size listSize={item} />}
-            />
-          </View>
-          {/* color */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
-              Color
-            </Text>
-            <View style={{ paddingLeft: 10 }}>
-              <FlatList
-                data={DATA_COLOR}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <Color colorName={item} />}
-              />
-            </View>
-          </View>
-          {/* Description */}
-          <View style={{ marginBottom: 50 }}>
-            <Text style={{ color: "#000", fontSize: 18, fontWeight: "700" }}>
-              Description
-            </Text>
-            <ViewMoreText
-              numberOfLines={3}
-              renderViewMore={renderViewMore}
-              renderViewLess={renderViewLess}
-              textStyle={{ paddingLeft: 10, marginTop: 5 }}
-            >
-              <Text
-                style={{ fontSize: "16", color: "#000", fontWeight: "500" }}
-              >
-                Lorem ipsum dolor sit amet, in quo dolorum ponderum, nam veri
-                molestie constituto eu. Eum enim tantas sadipscing ne, ut omnes
-                malorum nostrum cum. Errem populo qui ne, ea ipsum antiopam
-                definitionem eos.
-              </Text>
-            </ViewMoreText>
-          </View>
-
-          {/* Button */}
-          <View
-            style={{
-              width: "100%",
-              marginBottom: 100,
-              flexDirection: "row",
-              justifyContent: "space-around",
-            }}
-          >
-            <TouchableOpacity style={styles.btn}>
-              <CartIcon color="#000" size={22} />
-              <Text style={styles.textBtn}>Add To Cart</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-              <PayUpIcon color="#000" size={24} />
-              <Text style={styles.textBtn}>Pay Up</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </ListContext.Provider>
   );
 };
 

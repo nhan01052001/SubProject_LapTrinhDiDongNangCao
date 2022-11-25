@@ -16,7 +16,7 @@ import { AddNewIcon } from "./IconBottomTabs";
 
 const size = 22;
 
-const CartBar = ({ cart }) => {
+const CartBar = ({ cart, onPress }) => {
   const [isChecked, setChecked] = useState(false);
   const [amount, setAmount] = useState(1);
 
@@ -63,8 +63,16 @@ const CartBar = ({ cart }) => {
             />
           </View>
           {/* Thong tin khac */}
-          <View style={{ marginLeft: 10 }}>
-            <Text style={{ color: "#000", fontSize: 16, fontWeight: "600" }}>
+          <View style={{ marginLeft: 10, width: "65%" }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: "#000",
+                fontSize: 16,
+                fontWeight: "600",
+                // width: "70%",
+              }}
+            >
               {cart.name}
             </Text>
             <Text
@@ -135,7 +143,7 @@ const CartBar = ({ cart }) => {
                   <Text>{amount}</Text>
                 </View>
                 <TouchableOpacity
-                  //   onPress={increasing}
+                  onPress={onPress}
                   style={{
                     paddingHorizontal: 5,
                     backgroundColor: "#63d689",
